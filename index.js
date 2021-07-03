@@ -3,7 +3,7 @@ const app = express()
 const cors = require('cors')
 const passport = require('passport')
 const cookieSession = require('cookie-session')
-const PORT = process.env.PORT || 5000
+const PORT = process.env.PORT || 3001
 
 require('dotenv').config()
 
@@ -45,7 +45,7 @@ app.get('/google', passport.authenticate('google', {
 app.get('/google/callback', passport.authenticate('google', { failureRedirect: '/failed' }),
 	function (req, res) {
 		// Successful authentication, redirect home.
-		res.redirect('http://localhost:4000/?accessToken=' + req.user.accessToken);
+		res.redirect(`${process.env.CLIENT_URL}/?accessToken=` + req.user.accessToken);
 	});
 
 app.get('/logout', (req, res) => {
