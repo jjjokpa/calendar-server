@@ -10,7 +10,7 @@ const insertDate = ({
 	endTime,
 	color,
 	token
-}) => {
+}, callback) => {
 	const { google } = require('googleapis')
 
 	const { OAuth2 } = google.auth
@@ -56,6 +56,8 @@ const insertDate = ({
 		ColorId: color
 	}
 
+	console.log(event)
+
 	calendar.freebusy.query({
 		resource: {
 			timeMin: eventStartTime,
@@ -68,7 +70,11 @@ const insertDate = ({
 			],
 		}
 	}, (err, res) => {
-		if (err) return console.error('エラーが発生しました。', err)
+		if (err) {
+			console.log('エラーが発生しました。')
+			callback({ status: 500, message: 'エラーが発生しました。' })
+			return;
+		}
 		const eventsArr = res.data.calendars.primary.busy
 
 		if (eventsArr.length === 0) {
@@ -80,10 +86,17 @@ const insertDate = ({
 					console.error('エラーが発生しました。', err)
 				}
 
-				return console.log('登録成功')
+				console.log('登録成功')
+
+				callback({ status: 200, message: '登録成功' })
+
+				return;
 			})
 		}
-		return console.log('既にスケジュールが有ります。')
+
+		console.log('既にスケジュールが有ります。')
+		callback({ status: 400, message: '既にスケジュールが有ります。' })
+		return;
 	})
 }
 

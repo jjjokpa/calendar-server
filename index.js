@@ -44,7 +44,6 @@ app.get('/google', passport.authenticate('google', {
 
 app.get('/google/callback', passport.authenticate('google', { failureRedirect: '/failed' }),
 	function (req, res) {
-		// Successful authentication, redirect home.
 		res.redirect(`${process.env.CLIENT_URL}/?accessToken=` + req.user.accessToken);
 	});
 
@@ -57,11 +56,10 @@ app.get('/logout', (req, res) => {
 app.post('/send-event', (req, res) => {
 
 	const data = req.body
-	console.log(data)
-	insertDate(data)
-
+	insertDate(data, (result) => {
+		// error code, error message
+		res.status(result.status).send(JSON.stringify(result));
+	})
 })
-
-
 
 app.listen(PORT || 3001, () => console.log(`listen on port ${PORT}`))
