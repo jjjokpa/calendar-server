@@ -3,6 +3,7 @@ const app = express()
 const cors = require('cors')
 const passport = require('passport')
 const cookieSession = require('cookie-session')
+const PORT = process.env.PORT || 5000
 
 require('dotenv').config()
 
@@ -63,4 +64,4 @@ app.post('/send-event', (req, res) => {
 
 
 
-app.listen(3001, () => console.log(`listen on port ${3001}`))
+app.listen(PORT || 3001, () => console.log(`listen on port ${PORT}`))
